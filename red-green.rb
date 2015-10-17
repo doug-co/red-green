@@ -5,15 +5,17 @@ require 'socket' # Provides TCPServer and TCPSocket classes
 require 'listen'
 require 'base64'
 require 'json'
+require_relative 'resources'
 
 # get list of test items from ARGV
 @modules = ARGV
 @modules = [ "unittests" ] if not @test_items or @test_items.length == 0
 
-@port = 8100
-@refresh_secs = 5
 @git = { std_out: "" }
 @result = { result: :ok, app_out: "", output: ""}
+@config = { listen_path: [ "#{ENV['HOME']}/Projects/Z0lverEdu/application", "#{ENV['HOME']}/Projects/Z0lverEdu/unittests" ],
+            port: 8180
+          }
 
 # this is for managing status change events for threads
 class Serial
@@ -39,11 +41,6 @@ class Serial
 end
 
 @serial = Serial.new()
-
-# Favicon's base64 encoded
-@favicon = { :green => "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",
-  :red => "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"
-}
 
 # read stdout and stderr form external commands
 def system_with_stderr(cmd)
@@ -148,7 +145,7 @@ class Tag
 end
 
 def template(page_title)
-  port = @port
+  port = @config[:port]
   serial = @serial.value
   Tag.new() {
     def js_console(*args) "console.log(\"#{args.join}\");" end
@@ -156,30 +153,30 @@ def template(page_title)
     html {
       head {
         title { page_title }
-        link(href: "//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css", rel: "stylesheet")
-        link(href: "https://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.2.0/metisMenu.min.css", rel: "stylesheet", type: "text/css")
-        link(href: "http://ironsummitmedia.github.io/startbootstrap-sb-admin-2/dist/css/sb-admin-2.css", rel: "stylesheet")
-        link(href: "http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css", rel: "stylesheet", type: "text/css")
+        link(href: "/static/bootstrap.min.css", rel: "stylesheet")
+        link(href: "/static/metismenu.min.css", rel: "stylesheet", type: "text/css")
+        link(href: "/static/sb-admin-2.css", rel: "stylesheet")
+        link(href: "/static/font-awesome.min.css", rel: "stylesheet", type: "text/css")
         link(href: "http://localhost:#{port}/favicon.ico?v=#{Time.now.to_i}", rel: "shortcut icon")
         style {
-          css(:body, background_color: '#ffffff', font_family: '"Arial", Arial, sans-serif')
-          css(:_ok,  background_color: '#80C080', border_color: '#70A070')
-          css(:_error, background_color: '#C08080', border_color: '#A02020')
-          css(:_info, background_color: '#f0f0f0')
-          css(:_notification, padding: '5px', border: '2px solid', border_radius: '5px')
-          css(:_mrgn_r, margin_right: '5px')
-          css(:_mrgn_b, margin_bottom: '5px')
-          css(:_fltr, float: 'right')
+#          css(:body, background_color: '#ffffff', font_family: '"Arial", Arial, sans-serif')
+#          css(:_ok,  background_color: '#80C080', border_color: '#70A070')
+#          css(:_error, background_color: '#C08080', border_color: '#A02020')
+#          css(:_info, background_color: '#f0f0f0')
+#          css(:_notification, padding: '5px', border: '2px solid', border_radius: '5px')
+#          css(:_mrgn_r, margin_right: '5px')
+#          css(:_mrgn_b, margin_bottom: '5px')
+#          css(:_fltr, float: 'right')
           css(:_term, :notification, background_color: '#202020', border_color: '#101040', color: '#00C000')
-          css(:pre, font_family: '"courier new", courier, monospace"', font_size: '8px')
+#          css(:pre, font_family: '"courier new", courier, monospace"', font_size: '8px')
         }
       }
       body {
         div(id: "wrapper") { yield if block_given? }
-        script(src: "https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js")
-        script(src: "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js")
-        script(src: "https://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.2.0/metisMenu.min.js")
-        script(src: "http://ironsummitmedia.github.io/startbootstrap-sb-admin-2/dist/js/sb-admin-2.js")
+        script(src: "/static/jquery.min.js")
+        script(src: "/static/bootstrap.min.js")
+        script(src: "/static/metismenu.min.js")
+        script(src: "/static/sb-admin-2.js")
         script {
           <<-END_OF_JS
 
@@ -306,12 +303,6 @@ end
 
 def log(msg) puts "#{Time.now}: #{msg}" end
 
-def handle_get_favicon
-  icon = (@result[:result] == :ok) ? :green : :red
-  log("favicon icon: #{icon}")
-  return Base64.decode64(@favicon[icon])
-end
-
 def handle_get_poll(serial)
   log("poll: handler [#{serial}]")
   # wait for @serial to update, or just return if we are already behind
@@ -322,24 +313,51 @@ def handle_get_poll(serial)
   return res
 end
 
-def handle_get(path)
-  log "#{Time.now} GET #{path}"
-  case path
-  when '/'; make_response { handle_get_root }
-  when /^\/poll\?q=(\d+)/; make_response('application/json') { handle_get_poll($1) }
-  when /^\/favicon.ico/; make_response('image/jpg') { handle_get_favicon }
-  else; log("#{path} Not Found"); make_response(nil, 404, "Not Found")
+def resource_not_found(path)
+  log("#{path} Not Found")
+  make_response(nil, false, 404, "Not Found")
+end
+
+def serve_resource_id(id, path)
+  if resource = Resources.list[id] then
+    log("#{path} -- #{resource[:name]} #{resource[:type]} -- #{resource[:comment]}")
+    make_response(resource[:type], resource[:gzip]) { resource[:data] }
+  else
+    nil
   end
 end
 
+def serve_resource_name(name, path)
+  begin
+    log("resource_name #{path}")
+    serve_resource_id(Resources.name_index[name][:key], path)
+  rescue
+    log("resource_name excpetion")
+    nil
+  end
+end
+
+def handle_get(path)
+  log "GET #{path}"
+  value = nil
+  case path
+  when '/';                    value = make_response { handle_get_root }
+  when /^\/poll\?q=(\d+)/;     value = make_response('application/json') { handle_get_poll($1) }
+  when /^\/static\/([^\/]+)$/; value = serve_resource_name($1, path)
+  when /^\/favicon.ico/;       value = serve_resource_id("favicon_#{(@result[:result] == :ok) ? :green : :red}", path)
+  end
+  (value) ? value : resource_not_found(path)
+end
+
 def handler(request)
+  log "request:[#{request.chomp}]"
   case request
   when /GET\s+(.*)\s+HTTP/; handle_get($1)
-  else; make_response(nil, 404, "Not Found")
+  else; request =~ /\w+\s+(.*)\s+HTTP/; resource_not_found($1)
   end    
 end
 
-def make_response(type = "text/html", code = 200, msg = "OK", &block)
+def make_response(type = "text/html", compressed = false, code = 200, msg = "OK", &block)
   response = [ "HTTP/1.1 #{code} #{msg}" ]
   result = (block_given?) ? yield : nil
   if result then 
@@ -347,7 +365,8 @@ def make_response(type = "text/html", code = 200, msg = "OK", &block)
     response += [ "Content-Type: #{type}",
                   "Content-Length: #{size}" ]
   end
-  response += ["Connection: close", "" ]
+  response += [ "Content-Encoding: gzip" ] if compressed
+  response += [ "Connection: close", "" ]
   response.push(result) if result
   return response.join("\r\n")
 end
@@ -360,7 +379,7 @@ def update_status
 end
 
 @dir = Dir.pwd
-listener = Listen.to('application', 'unittests', ignore: /(^.?#|~$)/) do |mod, add, rem|
+listener = Listen.to(*@config[:listen_path], ignore: /(^.?#|~$)/) do |mod, add, rem|
   @changes = mod + add + rem
   @changes.map! { |f| f.gsub(@dir+'/','') }
   @modules = @changes.map { |f| f =~ /^[^\/]+\/([^\/]+)/; $1 }.uniq
@@ -376,8 +395,8 @@ listener.start
 
 # Initialize a TCPServer object that will listen
 # on localhost:2345 for incoming connections.
-server = TCPServer.new('localhost', @port)
-puts "test server running on: http://localhost:#{@port}"
+server = TCPServer.new('localhost', @config[:port])
+puts "test server running on: http://localhost:#{@config[:port]}"
 
 # loop infinitely, processing one incoming
 # connection at a time.
