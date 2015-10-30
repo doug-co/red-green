@@ -52,7 +52,7 @@ class Resources
               "S4hkEqXX9J/q8fGtJnoQ4Wo9o2qtud/ZxxVrXTJE9drYk7ZLV/4YUlOlA/9f8OAo3b+8X2+3D092J5eem3T63s7Fg6yFDEoFmXLW",
               "syrIrX6XHR6bTYCKXQHHICIbkv6V39NMb3d+/DTdxs1Da9X1G/UX0v796uWLqbugv9YbjauzjAIq1UMMFegzSel1IWBfqmVomZ0K",
               "yKQdJPuQXvgrncr82U+H6abyqAtrw/+mVdUtlbsndadajjat+T3ja68zdizAu5L94+X/jv8DEAzQ7IoVmuYAAAAASUVORK5CYII="
-            ].join
+            ]
     },
     favicon_red: {
       name: "red.png",
@@ -86,7 +86,7 @@ class Resources
               "5R18XfpxfGRvv5zqHgICBpE0P8Wye33XbjerElJgBjyzz7mT6/yndaD+r3V9zXC++O37O5cefurc/bZz8dzw+xp+Ri2auRnU/m8J",
               "5Ix70ZR+ajb3RLB0TI/j/G20RtxBXe8r9Uev3P3kBkr6UqPV9y489/5mHF56dPi1PFT3yim/4RJMdDissqjfgjLFTLu07nwx9AeS",
               "i/NCilMD86O63lMDvHP13qevK4+ynbj4mja0g+tqkl19kv0n347pdhquDfWroa7eWH47/gs0xQ8h4wthJgAAAABJRU5ErkJggg=="
-            ].join
+            ]
     },
     bootstrap_css: { 
       name: "bootstrap.min.css",
@@ -357,7 +357,7 @@ class Resources
               "pzp2nDsLMDB3EIqeO7YWrbnz2pFzd/f4Os/o/Zi7z/OjuB+efXn6F/YzGvHNoNXRMek4/RZgYPohFD39TC1b0++1a5/+zgO8f/67",
               "o35AAO5F/rAEjMQhWgtl/txxri3AwFxDKHqumTm25tpr1z7XyFDun1UMyQPzR6O5d6Y83S+dooBncrc+URgt7dqOsUVAFUprxbaj",
               "NDxTjS0RgI0NW89ldqpbfBIJQzQJy7gLGxBzBJCWdAFsCzvWGsq7C9zJGcMG3rYiADQQ/Tv6aV00KPzj43pkdSlESt6CsnT7v1Tb",
-              "67us3gEA" ].join
+              "67us3gEA" ]
     },
     bootstrap_js: { 
       name: "bootstrap.min.js",
@@ -495,7 +495,7 @@ class Resources
               "g4QfLoDeKbB35ToRRDDMltE9x2xNWu5FOywPmiW2BiqPWGDbOFzOg0kwxqtdIqAiqfDjQVAtkfo/K3MFjY7eGm6x3KXJb43zAHOV",
               "qmSgbRil3XP4J2io1ummtbKmxFLjQEwDXfHG4g7WwQQvbbGkrcUkn1So25uaEutjpn9KbYnLLo++xAtOa0y8t34HwRFXAF/XyU8A",
               "6o8IRCrLOpM/9nuQ/4JjilffMiixi0hFMjyHm1Mhcpp9wPvUdBvMATOKlKaHwsxyRMz+F16/SW7QjwAA"
-            ].join
+            ]
     },
     font_awesome_css: { 
       name: "font-awesome.min.css",
@@ -570,7 +570,7 @@ class Resources
               "sLsGFD4+4nd1f4IEAvYjazuYKSBqF8e9fPho0KZIA5FINiQ7rA8T6zawHvL/pW7OqS3w8QvepyHbIXjwqzJGBC8T/wRB0dNIQp1D",
               "0Z//MCKVFRAR+YiwloqIw+VSKfjvd0TE4SJUCUEkLjLk00dPAxOwht1ORKR6O6sav/p+oIDZAm4ARFFAAnuJL3EWFzEln5zF12mL",
               "zPFCY+IG8bLi8K9dRJbB9T9jW+OO4FUAAA=="
-            ].join
+            ]
     },
     jquery_js: { 
       name: "jquery.min.js",
@@ -973,7 +973,7 @@ class Resources
               "ucVpwzsR+VocIDOGj5OKw/n4Q3UzEVmE1sArCHeJfTLIIF0R30xMmvzvDm/H9neaiDUJGXgbECnn5uz9ARzj1b9QU73D7+f+Q80X",
               "F4v5hMSMIEA4YEK7z0HGmFl7XrzTkgjYtOXumMsfkJVup6zsUchx626jhTlqZOd/OT7+6zNJTfYjiQq0+H/5+V0hY+neztgG8l9f",
               "71W4nEkBAA=="
-            ].join,
+            ],
     },
     metismenu_css: { 
       name: "metismenu.min.css",
@@ -988,7 +988,7 @@ class Resources
               "vgrd18lvspkrYlwW9mXt+9GeQQ76eCeO+Q/gwRLa9p6gE/nhq+XIZI78vR0kGzSeUVTo1oVHShpq4HK+yKC4ij2u3TXpLDnOhyPh",
               "KOqzR3IMO0fSQf83Erf0ti9NJWO00rDPUFeMNpGQAk4SPopHKGEy3ZyiUBT7Smo07ZOKFDBqLxb/+VXDWG5BtU3vohKzDETc21kn",
               "sstsTby8FmlnAlTD435GkH9aDKOyWtEO8G8W+llGv+YWDV0rJStQpokeun65RY0JMjTNs4gR8Czq8BtMae9t9AUAAA=="
-            ].join
+            ]
     },
     metismenu_js: { 
       name: "metismenu.min.js",
@@ -1015,7 +1015,7 @@ class Resources
               "ffRP7IFD3s/6l1B8UQNJHHlqUYuuL/fotraC8cGnHDr4IuidEx9nn0jJCkDIzzUFz28Jo1I2k3brYtgW9H+F4aOQHSHWBbpTOmZr",
               "2WWj+8DY5kUnCTxGm7yA0BB/I2gOj+kJTK7+U0weAtMpoB7vvn0I9g33D2BcfQUY5ysHcu0fQ/130j8HFu4xZIFLIC8gJ6aomNFF",
               "yMdMpYGdwAPDeTT2W8axnDR/HFvU/Kbjxd9GigHBzQ8AAA=="
-            ].join
+            ]
     },
     sbadmin_2_css: { 
       name: "sb-admin-2.css",
@@ -1043,7 +1043,7 @@ class Resources
               "OehTNgUZrd50im9F269pt+ntRuit14O8nrjNa9vjtf1RXushXv7mCi+VQIE8Spjq/4jgnav+/hliwfmrM0bmlXG8TzU7BSfrsUAI",
               "OUw8BnqjcU3I7icmWqqmkpyPVSi2fN3UJbjoDkdJaWoP5EPjUVu4/GHSDfybxvYGhREfx2zhiZHNkhscTdZkF65JW1o2tdMm3J68",
               "GtE5rlbIua4OW8ITk2BLatDNMPBDf9uWfaac18/FDt/2UGpJz3G2As91dtQYnhiVbcFBl0m8wyuTnf8Cn4tsk9kVAAA="
-            ].join
+            ]
     },
     sbadmin_2_js: { 
       name: "sb-admin-2.js",
@@ -1058,16 +1058,35 @@ class Resources
               "A1H7PjX61Gs6Qs+A0uL/ljV41B3+o/I5Gs1BOqJtzdv34HuLuMG9ZC7kSyCFfb4uMhjpNPeS5MF/C/tkCtq/irmbcqz1iBd7GCdZ",
               "QVTE06rSbrFLp+8gbp7jBTv9218fb3R0BVojqZFheKkL7rcyH90okeTyvZImrfSSACchKiEdGvbqGht0rVGBu9pgBYdDX+blxX/6",
               "I6K5xOf7io2gxKOGnT/P94tTgc5r33BDnbCZMYGEmgFCEk/o0H0mCCLFNpl3efGtKw1N9L+ZvxWVbxydBAAA"
-            ].join
+            ]
     }
- }
+  }
 
- @name_index = {}
- @list.each_pair do |key,resource|
-   puts "resource: #{resource[:name]}"
-   resource[:key] = key;
-   resource[:data] = Base64.strict_decode64(resource[:data])
-   @name_index[resource[:name]] = resource
- end
-  
+  @name_index = {}
+  @list.each_pair do |key,resource|
+    resource[:key] = key;
+    resource[:data] = Base64.strict_decode64(resource[:data].join)
+    @name_index[resource[:name]] = resource
+  end
+
+  # load a resource file - file must be in the resource directory.
+  # names must start with a word charater, and must contain only word characters or [_-.] characters
+  def self.load_file(name, version, comment, type, gzip = false)
+    if name =~ /^[\w\_\-\.\ ]+$/ then
+      file_name = "#{File.dirname(__FILE__)}/resources/#{name}"
+      data = File.read(file_name)
+      if data then
+        key = name
+        resource = { key: key, name: name, version: version, comment: comment, type: type, gzip: gzip, data: data }
+        @list[key] = resource
+        @name_index[resource[:name]] = resource
+      else
+        raise "unable to load file."
+      end
+    else
+      raise NameError, "bad file name"
+    end
+  end
+
+  def self.show; @list.each_pair { |k,v| puts "resource: #{k}:#{v[:name]}" } end
 end
