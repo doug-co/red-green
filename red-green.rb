@@ -1,16 +1,42 @@
 #!/usr/bin/ruby
 
-require 'open3'
-require 'socket' # Provides TCPServer and TCPSocket classes
 require 'base64'
+require 'optparse'
 require_relative 'resources'
 require_relative 'tag'
 require_relative 'server.rb'
 require_relative 'tester.rb'
 
+@options = { config: "rg-conf.rb", port: 1800, project_path: "./", path: [] }
+OptionParser.new do |opts|
+  opts.banner = "Usage: red-green.rb [options]"
+
+  opts.on("-c", "--config FILE", "config file -- ruby file with test config and setup") do |conf|
+    @options[:config] = conf
+  end
+  opts.on("-p", "--port N", Integer, "http server port") do |port|
+    @options[:port] = port
+  end
+  opts.on("-B", "--base-path PATH", "base project path") do |path|
+    @options[:project_path] = path
+  end
+  opts.on("-P", "--path PATH", "path to watch for file modify, add, remove events") do |path|
+    @options[:path] << path
+  end
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+end.parse!
+
+p options
+p ARGV
+
 # get list of test items from ARGV
 @modules = ARGV
 @modules = [ "unittests" ] if not @test_items or @test_items.length == 0
+
+exit
 
 proj_p = "#{ENV['HOME']}/Projects/Z0lverEdu"
 @config = { project_path: proj_p,
