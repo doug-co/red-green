@@ -1,4 +1,4 @@
-# red-green
+# Red-Green
 
 Red-Green is a TDD (Test Driven Development) testing tool.
 
@@ -27,7 +27,7 @@ This is still a bit rudamentary in its current form.  There is a lot
 of room for experimentation and improvement.  Comments and
 Contributions are welcome.
 
-A few Notes:
+## A few Notes:
 
 - The web server is implemented as simple TCPServer object, but uses
   Thread to make it multi-threaded.
@@ -42,7 +42,7 @@ A few Notes:
 - the Tester class is built on Serial class, but handles running test
   programs getting results, and providing the results to the server.
 
-A few goals:
+## A few goals:
 
 - keep the tool as self contained as possible (currently it uses the
   Listen gem), bootstrap, and jquery are served from the app web
