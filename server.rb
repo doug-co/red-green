@@ -1,3 +1,4 @@
+require 'socket'
 require_relative 'rg_logger'
 
 class HTTPServer
