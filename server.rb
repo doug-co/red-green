@@ -1,4 +1,4 @@
-require 'socket'
+require 'socket' # Provides TCPServer and TCPSocket classes
 require_relative 'rg_logger'
 
 class HTTPServer

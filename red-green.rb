@@ -188,8 +188,12 @@ def serve_resource_id(server, id, path)
   end
 end
 
+<<<<<<< HEAD
 url = "http://localhost:#{@options[:port]}"
 puts "test server running on: #{url}"
+=======
+puts "test server running on: http://localhost:#{@options[:port]}"
+>>>>>>> master
 server = HTTPServer.new('localhost', @options[:port]).start
 server.set_logger { |msg| log(msg) }
 
