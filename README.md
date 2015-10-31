@@ -29,6 +29,10 @@ Contributions are welcome.
 
 ## A few Notes:
 
+- It is written as a web server/client combination app, so it is
+  viewed in a web browser, and has a server portion.  It is intended
+  to run locally on an individuals computer, but viewed in a browser.
+
 - The web server is implemented as simple TCPServer object, but uses
   Thread to make it multi-threaded.
 
