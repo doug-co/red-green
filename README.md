@@ -27,7 +27,7 @@ This is still a bit rudamentary in its current form.  There is a lot
 of room for experimentation and improvement.  Comments and
 Contributions are welcome.
 
-## A few Notes:
+## Some Notes:
 
 - It is written as a web server/client combination app, so it is
   viewed in a web browser, and has a server portion.  It is intended
@@ -46,7 +46,10 @@ Contributions are welcome.
 - the Tester class is built on Serial class, but handles running test
   programs getting results, and providing the results to the server.
 
-## A few goals:
+- test setup and config happens in a ruby file loaded as the config.
+  It needs to have an 'init' function and a 'test' function.
+
+## Goals:
 
 - keep the tool as self contained as possible (currently it uses the
   Listen gem), bootstrap, and jquery are served from the app web
@@ -56,3 +59,8 @@ Contributions are welcome.
 - make the web client respond quickly.
 
 - make it useful with as many different testing tools as possible
+
+## ToDos
+
+- write a HowTo
+

@@ -1,5 +1,6 @@
 require 'listen'
 require 'json'
+require 'open3'
 require_relative 'serial'
 require_relative 'rg_logger'
 
