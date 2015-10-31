@@ -1,25 +1,13 @@
 #!/usr/bin/ruby
 
-require 'open3'
-require 'socket' # Provides TCPServer and TCPSocket classes
 require 'base64'
+require 'optparse'
 require_relative 'resources'
 require_relative 'tag'
 require_relative 'server.rb'
 require_relative 'tester.rb'
 
-# get list of test items from ARGV
-@modules = ARGV
-@modules = [ "unittests" ] if not @test_items or @test_items.length == 0
-
-proj_p = "#{ENV['HOME']}/Projects/Z0lverEdu"
-@config = { project_path: proj_p,
-            listen_path: [ "#{proj_p}/application", "#{proj_p}/unittests" ],
-            port: 8180
-          }
-
-puts @config
-
+# look for gems we require, exit if they are not installed
 def gems_installed(list)
   ok = true
   result = list.map { |gem| [ gem, `gem list #{gem}`.chomp ] }
@@ -33,46 +21,66 @@ end
 
 exit if not gems_installed(['listen'])
 
-# load additional resources
-Resources.load_file("red-green.js", '1.0', 'javascript for application specific behaviors', 'text/javascript')
 
-Resources.show
+# parse command line options
+@options = { config: "rg-conf.rb", port: 1800, project_path: "./", path: [] }
+OptionParser.new do |opts|
+  opts.banner = "Usage: red-green.rb [options]"
 
-#@serial = Serial.new()
-@test = Tester.new(@config[:listen_path]) do |mod, add, rem|
-  changes = mod + add + rem
-  changes.map! { |f| f.gsub(@config[:project_path]+'/','') }
-  modules = changes.map { |f| f =~ /^[^\/]+\/([^\/]+)/; $1 }.uniq
+  opts.on("-c", "--config FILE", "config file -- ruby file with test config and setup") do |conf|
+    @options[:config] = conf
+  end
+  opts.on("-P", "--port N", Integer, "http server port") do |port|
+    @options[:port] = port
+  end
+  opts.on("-B", "--base-path PATH", "base project path") do |path|
+    @options[:project_path] = path
+  end
+  opts.on("-p", "--path PATH", "path relative to base-path to watch for file modify, add, remove events") do |path|
+    @options[:path] << path
+  end
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+end.parse!
 
-  cmd = "nosetests --nocapture --logging-level=ERROR --with-gae --gae-application='unittests/test.yaml' #{modules.join(' ') or "unittests"}"
+# get list of test items from ARGV
+@modules = ARGV
+@modules = [ "unittests" ] if not @test_items or @test_items.length == 0
 
-  test_results = Tester.system_pipe3(@config[:project_path], cmd)
-  git_results = Tester.system_pipe3(@config[:project_path], "git status")
-  pylint_cmd = "pylint --rcfile=pylintrc #{(mod+add).join(' ')} -r n -f html"
-  pylint_results = Tester.system_pipe3(@config[:project_path], pylint_cmd)
-  # modify pylint output for sb-admin-2
-  pylint_out = pylint_results[:stdout].split[3..-4]
-  pylint_out[2] = '<table class="table">'
-  pylint_out.insert(2, '<div class="table-responsive">')
-  pylint_out.insert(-1, '</div>')
-  pylint_out.delete_if { |item| item =~ /^class=\"(even|odd)/ }
-  pylint_out.each_index do |i|
-    map = { 'error' => 'danger', 'warning' => 'warning', 'refactor' => 'info' }
-    if pylint_out[i] == "<tr" then
-      next if pylint_out[i+1] =~ /header/
-      pylint_out[i+1] =~ /\>(.*)\</
-      pylint_out[i] += ' class="' + (map[$1] || "") + '">'
+if File.exist?(@options[:config]) then
+  load @options[:config]
+else
+  puts "expecting config file at: '#{@options[:config]}'"
+  exit
+end
+Dir.chdir(@options[:project_path])
+
+if @options[:path].length == 0 then
+  puts "no watch path specified. Add one or more directories to watch using '-p' option"
+  exit
+else
+  @options[:path].each do |path|
+    if not File.exist?("#{@options[:project_path]}/#{path}") then
+      puts "path: '#{path}' does not exist."
+      exit
     end
   end
-  result = (test_results[:stderr].split(/\n/)[-1] == "OK") ? :ok : :error
-
-  { :status => result, :error => test_results[:stderr], :stdout => test_results[:stdout],
-    :git => git_results[:stdout], :pylint => pylint_out.join("\n") }
 end
+
+# load additional resources
+Resources.load_file("red-green.js", '1.0', 'javascript for application specific behaviors', 'text/javascript')
+exit if not init()
+puts @options
+Resources.show
+
+# create tester object
+@test = Tester.new(@options[:path]) { |mod, add, rem| test(mod, add, rem) }
 @test.set_logger { |msg| log(msg) }
 
 def template(page_title)
-  port = @config[:port]
+  port = @options[:port]
   serial = @test.value
   Tag.new() {
     def js_console(*args) append("console.log(\"#{args.join}\");\n") end
@@ -179,8 +187,8 @@ def serve_resource_id(server, id, path)
   end
 end
 
-puts "test server running on: http://localhost:#{@config[:port]}"
-server = HTTPServer.new('localhost', @config[:port]).start
+puts "test server running on: http://localhost:#{@options[:port]}"
+server = HTTPServer.new('localhost', @options[:port]).start
 server.set_logger { |msg| log(msg) }
 
 server.handle(:static, [ :get ], /^\/static\/([^\/]+)$/) do |server, path, match|
