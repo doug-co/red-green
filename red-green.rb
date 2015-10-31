@@ -6,6 +6,7 @@ require_relative 'resources'
 require_relative 'tag'
 require_relative 'server.rb'
 require_relative 'tester.rb'
+require_relative 'web_load.rb'
 
 # look for gems we require, exit if they are not installed
 def gems_installed(list)
@@ -23,10 +24,13 @@ exit if not gems_installed(['listen'])
 
 
 # parse command line options
-@options = { config: "rg-conf.rb", port: 1800, project_path: "./", path: [] }
+@options = { auto: false, config: "rg-conf.rb", port: 1800, project_path: "./", path: [] }
 OptionParser.new do |opts|
   opts.banner = "Usage: red-green.rb [options]"
 
+  opts.on("-a", "--auto", "auto start web browser") do |auto|
+    @options[:auto] = auto
+  end
   opts.on("-c", "--config FILE", "config file -- ruby file with test config and setup") do |conf|
     @options[:config] = conf
   end
@@ -187,7 +191,8 @@ def serve_resource_id(server, id, path)
   end
 end
 
-puts "test server running on: http://localhost:#{@options[:port]}"
+url = "http://localhost:#{@options[:port]}"
+puts "test server running on: #{url}"
 server = HTTPServer.new('localhost', @options[:port]).start
 server.set_logger { |msg| log(msg) }
 
@@ -218,5 +223,7 @@ server.handle(:root, [:get], /^\/$/) do |server, path, match|
 end
 
 Thread.abort_on_exception = true
+
+WebLoad.page(url) if @options[:auto]
 
 server.thread.join
