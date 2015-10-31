@@ -43,6 +43,10 @@ class HTTPServer
     return self
   end
 
+  # called from the main loop, this parses each request, then searches for a
+  # handler that matches the request, then runs the associated handler code block
+  # it passes the return value from the code block back as the response to the
+  # request (handlers should use make_response to generate return values).
   def handle_request(request)
     if request =~ /^(\w+)\s+(.*)\s+HTTP/ then
       r_type = $1.downcase.to_sym
@@ -63,10 +67,12 @@ class HTTPServer
     end
   end
 
+  # registers a handler, which adds the code block to the list of handlers
   def handle(name, r_type, expr, &block)
     @handlers.push({name: name, methods: r_type, expr: expr, handler: block})
   end
 
+  # make a http response
   def make_response(type = "text/html", compressed = false, code = 200, msg = "OK", &block)
     response = [ "HTTP/1.1 #{code} #{msg}" ]
     result = (block_given?) ? yield : nil
@@ -81,8 +87,10 @@ class HTTPServer
     return response.join("\r\n")
   end
 
+  # build a 400 error respnose
   def respond_bad_request; make_response(nil, false, 400, "Bad Request") end
 
+  # build a 404 error response
   def respond_resource_not_found(path)
     log("#{path} Not Found")
     make_response(nil, false, 404, "Not Found")
