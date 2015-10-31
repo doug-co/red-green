@@ -24,10 +24,13 @@ exit if not gems_installed(['listen'])
 
 
 # parse command line options
-@options = { config: "rg-conf.rb", port: 1800, project_path: "./", path: [] }
+@options = { auto: false, config: "rg-conf.rb", port: 1800, project_path: "./", path: [] }
 OptionParser.new do |opts|
   opts.banner = "Usage: red-green.rb [options]"
 
+  opts.on("-a", "--auto", "auto start web browser") do |auto|
+    @options[:auto] = auto
+  end
   opts.on("-c", "--config FILE", "config file -- ruby file with test config and setup") do |conf|
     @options[:config] = conf
   end
@@ -221,6 +224,6 @@ end
 
 Thread.abort_on_exception = true
 
-WebLoad.page(url)
+WebLoad.page(url) if @options[:auto]
 
 server.thread.join
