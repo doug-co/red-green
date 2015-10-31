@@ -71,7 +71,7 @@ end
 
 # load additional resources
 Resources.load_file("red-green.js", '1.0', 'javascript for application specific behaviors', 'text/javascript')
-init()
+exit if not init()
 puts @options
 Resources.show
 
