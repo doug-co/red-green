@@ -57,15 +57,13 @@ Resources.show
   pylint_out.insert(-1, '</div>')
   pylint_out.delete_if { |item| item =~ /^class=\"(even|odd)/ }
   pylint_out.each_index do |i|
-    map = { 'warning' => 'danger', 'refactor' => 'warning', 'convention' => 'info' }
+    map = { 'error' => 'danger', 'warning' => 'warning', 'refactor' => 'info' }
     if pylint_out[i] == "<tr" then
       next if pylint_out[i+1] =~ /header/
       pylint_out[i+1] =~ /\>(.*)\</
       pylint_out[i] += ' class="' + (map[$1] || "") + '">'
     end
   end
-#  puts "[#{pylint_cmd}]:#{pylint_results[:stdout]}"
-#  puts "   :>>#{pylint_out}<<"
   result = (test_results[:stderr].split(/\n/)[-1] == "OK") ? :ok : :error
 
   { :status => result, :error => test_results[:stderr], :stdout => test_results[:stdout],
@@ -210,13 +208,6 @@ end
 server.handle(:root, [:get], /^\/$/) do |server, path, match|
   server.make_response { handle_get_root }
 end
-
-# def update_status
-#   log("file change detected.")
-#   @result = run_tests(@modules.join(' '))
-#   @git = system_with_stderr("git status")
-#   @serial.inc
-# end
 
 Thread.abort_on_exception = true
 
