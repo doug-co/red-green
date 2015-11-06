@@ -24,7 +24,7 @@ exit if not gems_installed(['listen'])
 
 
 # parse command line options
-@options = { auto: false, config: "rg-conf.rb", port: 1800, project_path: "./", path: [] }
+@options = { auto: false, config: "rg_conf.rb", port: 1800, project_path: "./", path: [], once: false }
 OptionParser.new do |opts|
   opts.banner = "Usage: red-green.rb [options]"
 
@@ -43,6 +43,10 @@ OptionParser.new do |opts|
   opts.on("-p", "--path PATH", "path relative to base-path to watch for file modify, add, remove events") do |path|
     @options[:path] << path
   end
+  opts.on("-o", "--once", "run tests once and exit (for testing configs)") do 
+    @options[:once] = true
+  end
+
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts
     exit
@@ -75,13 +79,19 @@ end
 
 # load additional resources
 Resources.load_file("red-green.js", '1.0', 'javascript for application specific behaviors', 'text/javascript')
+
+# run init from config file
 exit if not init()
-puts @options
 Resources.show
 
 # create tester object
 @test = Tester.new(@options[:path]) { |mod, add, rem| test(mod, add, rem) }
 @test.set_logger { |msg| log(msg) }
+
+if @options[:once] then
+  Thread.list.each { |t| t.join if t[:name] == :test }
+  exit
+end
 
 def template(page_title)
   port = @options[:port]
