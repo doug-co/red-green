@@ -8,7 +8,6 @@ class Tester < Serial
   include RGLogger
 
   attr_reader :results
-  attr_accessor :logger
   
   def self.system_pipe3(pwd, cmd)
     values = nil
@@ -26,12 +25,11 @@ class Tester < Serial
     super()
     @results = { status: :init }
     @test = (block_given?) ? block : nil
-    @logger = nil
 
     @listener = Listen.to(*paths, ignore: /(^.?#|~$)/) do |mod, add, rem|
       test(mod, add, rem)
     end
-    Thread.start { test([ '*' ]) }
+    Thread.start { Thread.current[:name] = :test; test([ '*' ]) }
     @listener.start
   end
 

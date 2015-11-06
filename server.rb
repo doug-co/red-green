@@ -5,19 +5,14 @@ class HTTPServer
   include RGLogger
   
   attr_reader :thread
-  attr_accessor :logger
   
   # Initialize a TCPServer object that will listen
   # on localhost:2345 for incoming connections.
   def initialize(host, port)
     @server = TCPServer.new(host, port)
     @handlers = []
-    @logger = nil
   end
 
-  # def logger(&block) @log = block end
-  # def log(msg) @log.call(msg) if @log end
-  
   def start
     # loop infinitely, processing one incoming
     # connection at a time.
