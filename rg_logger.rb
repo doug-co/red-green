@@ -1,9 +1,11 @@
-# this is a mixin which is meant to add simple logging facilities to a class
+# this is a mixin which adds a simple logging facility to a class
 
 module RGLogger
   def set_logger(&block)
-    self.logger = block if block_given?
+    @logger = block if block_given?
   end
+
+  def logger; @logger end
 
   def log(msg)
     self.logger.call(msg) if self.logger
